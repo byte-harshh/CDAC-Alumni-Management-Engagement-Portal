@@ -278,22 +278,26 @@ body {
 /* On very large screens, cap the height */
 @media (min-width: 1400px) {
     .about-hero {
-    display: flex;
-    align-items: flex-end;   /* keeps content toward bottom */
-    min-height: 45vh;
-}
+        display: flex;
+        align-items: flex-end;
+        /* keeps content toward bottom */
+        min-height: 45vh;
+    }
 }
 
 .about-hero-content {
     position: relative;
     z-index: 2;
     width: 100%;
-    max-width: none;          /* 🔥 remove center constraint */
+    max-width: none;
+    /* 🔥 remove center constraint */
     margin: 0;
-    padding: 70px 60px 50px;  /* 🔽 pushes content down */
+    padding: 70px 60px 50px;
+    /* 🔽 pushes content down */
     display: flex;
     flex-direction: column;
-    align-items: flex-start;  /* 🔥 hard left */
+    align-items: flex-start;
+    /* 🔥 hard left */
 }
 
 .banner-title {
@@ -310,7 +314,8 @@ body {
 }
 
 .breadcrumb-wrapper {
-    position: static;        /* ❌ no absolute/fixed */
+    position: static;
+    /* ❌ no absolute/fixed */
     margin-top: 6px;
 }
 
@@ -332,7 +337,7 @@ body {
         /* Smaller height on mobile */
     }
 
-   
+
     .about-hero-content {
         padding: 50px 20px 40px;
     }
@@ -920,8 +925,8 @@ body {
 .register-card-head .ant-select-selector:hover,
 .register-card-head .ant-picker:hover,
 .register-card-head .ant-input-affix-wrapper:hover {
-    border-color: #ff8c42 !important;
-    /* Light Orange */
+    border-color: #f37021 !important;
+    /* Official Orange */
 }
 
 .register-card-head .ant-input:focus,

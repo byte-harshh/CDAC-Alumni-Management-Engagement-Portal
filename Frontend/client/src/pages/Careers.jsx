@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../api/axios';
 import '../style/careers.css';
 
 const Careers = () => {
@@ -13,7 +13,7 @@ const Careers = () => {
 
   const fetchJobs = async () => {
     try {
-      const res = await axios.get('/api/jobs');
+      const res = await axios.get('/jobs');
       setJobs(res.data);
     } catch (error) {
       console.error('Error fetching jobs', error);
@@ -26,9 +26,10 @@ const Careers = () => {
 
     const formData = new FormData();
     formData.append('resume', resume);
+    formData.append('userId', user.id || 1);
 
     try {
-      await axios.post(`/api/jobs/${jobId}/apply`, formData, {
+      await axios.post(`/jobs/${jobId}/apply`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       alert('Application Submitted!');
@@ -41,19 +42,19 @@ const Careers = () => {
   return (
     <div className="career-page">
 
-       {/* ========= HERO SECTION ========= */}
-<div className="career-hero">
-  <div className="career-hero-content">
-    <h1>Careers@C-DAC</h1>
-    
+      {/* ========= HERO SECTION ========= */}
+      <div className="career-hero">
+        <div className="career-hero-content">
+          <h1>Careers@C-DAC</h1>
 
-    <div className="breadcrumb-pill">
-       <i className="bi bi-house-door"></i>
-      
-      <span>/ Careers</span>
-    </div>
-  </div>
-</div>
+
+          <div className="breadcrumb-pill">
+            <i className="bi bi-house-door"></i>
+
+            <span>/ Careers</span>
+          </div>
+        </div>
+      </div>
 
       {/* ========= MAIN CONTENT ========= */}
       <div className="container career-container">

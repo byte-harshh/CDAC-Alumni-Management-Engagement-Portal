@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import axios from '../api/axios';
 
 const Admin = () => {
     const [activeTab, setActiveTab] = useState('news');
@@ -20,7 +20,9 @@ const Admin = () => {
         if (file) formData.append('image', file);
 
         try {
-            await axios.post('/api/news', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+            // Updated to match ContentController
+            formData.append('type', 'NEWS');
+            await axios.post('/content', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
             alert('News Created!');
             setNewsData({ title: '', summary: '', content: '' });
             setFile(null);
@@ -32,7 +34,7 @@ const Admin = () => {
     const submitEvent = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('/api/events', eventData);
+            await axios.post('/events', eventData);
             alert('Event Created!');
             setEventData({ title: '', description: '', event_date: '', location: '', capacity: 100 });
         } catch (error) {
@@ -43,7 +45,7 @@ const Admin = () => {
     const submitJob = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('/api/jobs', jobData);
+            await axios.post('/jobs', jobData);
             alert('Job Posted!');
             setJobData({ title: '', company: '', description: '', location: '', apply_link: '' });
         } catch (error) {
@@ -55,10 +57,12 @@ const Admin = () => {
         e.preventDefault();
         const formData = new FormData();
         formData.append('title', galleryData.title);
+        // Updated to match ContentController
+        formData.append('type', 'GALLERY');
         if (file) formData.append('image', file);
 
         try {
-            await axios.post('/api/gallery', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+            await axios.post('/content', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
             alert('Image Uploaded!');
             setGalleryData({ title: '' });
             setFile(null);

@@ -5,12 +5,13 @@ import Footer from './components/Footer.jsx';
 import Home from './pages/Home.jsx';
 import Register from './pages/Register.jsx';
 import Login from './pages/Login.jsx';
-
+import Profile from './pages/Profile.jsx';
 import Members from './pages/Members.jsx';
 import News from './pages/News.jsx';
 import Events from './pages/Events.jsx';
 import Gallery from './pages/Gallery.jsx';
 import Admin from './pages/Admin.jsx';
+import AdminDashboard from './pages/AdminDashboard.jsx';
 import About from './pages/About.jsx';
 import Careers from './pages/Careers.jsx';
 import Contribute from './pages/Contribute.jsx';
@@ -32,6 +33,7 @@ function App() {
                         <Route path="/" element={<Home />} />
                         <Route path="/register" element={<Register />} />
                         <Route path="/login" element={<Login />} />
+                        <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
                         <Route path="/members" element={<Members />} />
                         <Route path="/news" element={<News />} />
                         <Route path="/events" element={<Events />} />
@@ -42,6 +44,7 @@ function App() {
                         <Route path="/engage" element={<Engage />} />
                         <Route path="/testimonials" element={<Testimonials />} />
                         <Route path="/blog" element={<Blog />} />
+                        <Route path="/admin-dashboard" element={<AdminDashboard />} />
                         <Route path="/admin" element={<PrivateRoute role="admin"><Admin /></PrivateRoute>} />
                         <Route path="/contact-us" element={<ContactUs />} />
 

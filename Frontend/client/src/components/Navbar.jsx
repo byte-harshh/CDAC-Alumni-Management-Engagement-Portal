@@ -58,11 +58,27 @@ const Navbar = () => {
                             </div>
 
                             {/* Row 2: User Actions (Aligned under Socials) */}
-                            {user && (
-                                <div className="d-flex align-items-center justify-content-end gap-2">
-                                    <small className="text-muted me-1 d-none d-sm-block" style={{ fontSize: '0.85rem' }}>Welcome, {user.name.split(' ')[0]}</small>
-                                </div>
-                            )}
+                            <div className="d-flex align-items-center justify-content-end gap-2">
+                                {user ? (
+                                    <>
+                                        <span className="fw-bold d-none d-sm-block" style={{ color: '#003366', fontSize: '0.9rem', fontFamily: "'Poppins', sans-serif" }}>
+                                            Welcome, {user.name.split(' ')[0]}
+                                        </span>
+                                        <button
+                                            onClick={handleLogout}
+                                            className="btn btn-sm btn-outline-danger ms-2"
+                                            style={{ borderRadius: '20px', padding: '4px 12px', fontSize: '0.8rem' }}
+                                        >
+                                            Sign Out
+                                        </button>
+                                    </>
+                                ) : (
+                                    <>
+                                        <Link to="/login" className="btn btn-sm btn-outline-primary" style={{ borderRadius: '20px' }}>Login</Link>
+                                        <Link to="/register" className="btn btn-sm btn-primary" style={{ borderRadius: '20px' }}>Register</Link>
+                                    </>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -103,6 +119,9 @@ const Navbar = () => {
                                     More
                                 </a>
                                 <ul className="dropdown-menu">
+                                    {user && (
+                                        <li><Link className="dropdown-item" to="/profile">My Profile</Link></li>
+                                    )}
                                     {user && user.role === 'admin' && (
                                         <li><Link className="dropdown-item" to="/admin">Admin Dashboard</Link></li>
                                     )}
@@ -136,6 +155,14 @@ const Navbar = () => {
                                 <li className="nav-item"><Link className="nav-link" to="/engage">Engage</Link></li>
                                 <li className="nav-item"><Link className="nav-link" to="/blog">Blog</Link></li>
                                 <li className="nav-item"><Link className="nav-link" to="/contact-us">Contact Us</Link></li>
+                                {!user ? (
+                                    <>
+                                        <li className="nav-item"><Link className="nav-link fw-bold text-primary" to="/login">Login</Link></li>
+                                        <li className="nav-item"><Link className="nav-link fw-bold" to="/register">Register</Link></li>
+                                    </>
+                                ) : (
+                                    <li className="nav-item"><button className="nav-link btn btn-link text-danger text-start" onClick={handleLogout}>Sign Out</button></li>
+                                )}
                                 {user?.role === "admin" && (
                                     <li className="nav-item"><Link className="nav-link text-danger" to="/admin">Admin Dashboard</Link></li>
                                 )}

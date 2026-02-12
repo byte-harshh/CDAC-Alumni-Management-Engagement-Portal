@@ -1,99 +1,97 @@
-// import React from 'react';
-
-// const Contribute = () => {
-//     return (
-//         <div className="container mt-4">
-//             <h1>Contribute</h1>
-//             <p>Give back to your alma mater and support the next generation of C-DAC students.</p>
-
-//             <div className="list-group">
-//                 <div className="list-group-item">
-//                     <h5 className="mb-1">Donations</h5>
-//                     <p className="mb-1">Support infrastructure and scholarship funds.</p>
-//                 </div>
-//                 <div className="list-group-item">
-//                     <h5 className="mb-1">Awards & Medals</h5>
-//                     <p className="mb-1">Sponsor course topper medals and awards.</p>
-//                 </div>
-//                 <div className="list-group-item">
-//                     <h5 className="mb-1">Internships & MoUs</h5>
-//                     <p className="mb-1">Offer internships or sign MoUs for collaboration.</p>
-//                 </div>
-//                 <div className="list-group-item">
-//                     <h5 className="mb-1">Start-ups</h5>
-//                     <p className="mb-1">Support alumni start-ups and innovation.</p>
-//                 </div>
-//             </div>
-//         </div>
-//     );
-// };
-
-// export default Contribute;
-
-
-import React from "react";
+import React, { useState } from "react";
+import axios from '../api/axios';
 import '../style/contribute.css';
 
 const Contribute = () => {
+  const [showModal, setShowModal] = useState(false);
+  const [category, setCategory] = useState('');
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const user = JSON.parse(localStorage.getItem('user'));
+
   const contributeData = [
-    {
-      id: 1,
-      title: "Donations",
-      description:
-        "Support C-DAC initiatives by contributing towards infrastructure development, research facilities, and student scholarships.",
-      icon: "💙",
-    },
-    {
-      id: 2,
-      title: "Awards & Medals",
-      description:
-        "Sponsor awards, medals, and recognitions to motivate academic excellence among students.",
-      icon: "🏅",
-    },
-    {
-      id: 3,
-      title: "Internships & MoUs",
-      description:
-        "Collaborate with C-DAC by offering internships, industrial training, or signing MoUs for academic partnerships.",
-      icon: "🤝",
-    },
-    {
-      id: 4,
-      title: "Start-ups & Innovation",
-      description:
-        "Support alumni-led start-ups, innovation projects, and entrepreneurship initiatives.",
-      icon: "🚀",
-    },
+    { id: 1, title: "Donations", desc: "Support infrastructure & scholarships.", icon: "💙", type: "DONATION" },
+    { id: 2, title: "Awards & Medals", desc: "Sponsor academic excellence.", icon: "🏅", type: "AWARDS" },
+    { id: 3, title: "Internships & MoUs", desc: "Offer internships or partnership.", icon: "🤝", type: "INTERNSHIP" },
+    { id: 4, title: "Start-ups", desc: "Support alumni innovation.", icon: "🚀", type: "STARTUP" },
   ];
+
+  const handleOpen = (type) => {
+    setCategory(type);
+    if (user) {
+      setFormData({ ...formData, name: user.name, email: user.email });
+    }
+    setShowModal(true);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.post('/engage', {
+        userId: user ? user.id : null,
+        userName: formData.name,
+        userEmail: formData.email,
+        category: category,
+        message: formData.message
+      });
+      alert('Contribution Request Submitted! Thank you.');
+      setShowModal(false);
+      setFormData({ name: '', email: '', message: '' });
+    } catch (error) {
+      alert('Submission Failed');
+    }
+  };
 
   return (
     <div className="container my-5">
       <div className="contribute-box">
-
         <h1 className="contribute-title">Contribute to C-DAC</h1>
         <p className="contribute-subtitle">
-          Give back to your alma mater and help shape the future of innovation,
-          research, and excellence at C-DAC.
+          Give back to your alma mater and help shape the future of innovation.
         </p>
 
         <div className="row g-4 mt-4">
           {contributeData.map((item) => (
             <div className="col-md-6 col-lg-3" key={item.id}>
-              <div className="contribute-card">
+              <div className="contribute-card" onClick={() => handleOpen(item.type)} style={{ cursor: 'pointer' }}>
                 <div className="contribute-icon">{item.icon}</div>
                 <h5 className="contribute-card-title">{item.title}</h5>
-                <p className="contribute-card-text">{item.description}</p>
+                <p className="contribute-card-text">{item.desc}</p>
+                <button className="btn btn-sm btn-outline-light mt-3">Get Involved</button>
               </div>
             </div>
           ))}
         </div>
 
-        <div className="contribute-footer">
-          <button className="btn btn-cdac-orange">
-            Get Involved
-          </button>
-        </div>
-
+        {/* Modal */}
+        {showModal && (
+          <div className="modal d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+            <div className="modal-dialog modal-dialog-centered">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title">Contribute: {category}</h5>
+                  <button className="btn-close" onClick={() => setShowModal(false)}></button>
+                </div>
+                <div className="modal-body">
+                  <form onSubmit={handleSubmit}>
+                    <div className="mb-3">
+                      <label>Name</label>
+                      <input className="form-control" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} required />
+                    </div>
+                    <div className="mb-3">
+                      <label>Email</label>
+                      <input className="form-control" value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} required />
+                    </div>
+                    <div className="mb-3">
+                      <label>Details / Message</label>
+                      <textarea className="form-control" rows="3" value={formData.message} onChange={e => setFormData({ ...formData, message: e.target.value })} required placeholder="How would you like to contribute?"></textarea>
+                    </div>
+                    <button className="btn btn-cdac-orange w-100">Submit Contribution</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

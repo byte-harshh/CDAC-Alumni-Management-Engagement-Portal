@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from '../api/axios'; // Use your custom axios instance
 import { useNavigate } from 'react-router-dom';
 import { Card, Form, Input, Button, Alert, Row, Col } from 'antd';
 import { LoginOutlined, UserOutlined, LockOutlined } from '@ant-design/icons';
-// import '../style/login.css'; // Removed to use global index.css theme
 
 const Login = () => {
   const [error, setError] = useState('');
@@ -12,13 +11,28 @@ const Login = () => {
 
   const onFinish = async (values) => {
     setLoading(true);
+    setError('');
+
     try {
-      const res = await axios.post('/api/auth/login', values);
-      localStorage.setItem('user', JSON.stringify(res.data.user));
+      // 1. Send Login Request
+      const res = await api.post('/auth/login', values);
+
+      // 2. Extract Data from Backend Response
+      // Backend returns: { token: "...", user: { ... } }
+      const { token, user } = res.data;
+
+      // 3. Save to Local Storage (CRITICAL STEP)
+      localStorage.setItem('token', token); // Save Token for API calls
+      localStorage.setItem('user', JSON.stringify(user)); // Save User info for display
+
+      // 4. Redirect to Dashboard/Home
+      alert("Login Successful!");
       navigate('/');
-      window.location.reload();
+      window.location.reload(); // Reload to update Navbar state
+
     } catch (err) {
-      setError(err.response?.data?.message || 'Login failed');
+      console.error("Login Error:", err);
+      setError(err.response?.data?.message || 'Login failed. Invalid Credentials.');
     } finally {
       setLoading(false);
     }
@@ -62,37 +76,27 @@ const Login = () => {
                 <Input.Password prefix={<LockOutlined />} placeholder="Password" />
               </Form.Item>
 
-              <div style={{ textAlign: 'right', marginBottom: '24px', marginTop: '-10px' }}>
-                <a href="/forgot-password" className="forgot-password-link">Forgot Password?</a>
-              </div>
-
               <Form.Item>
-                <Button type="primary" htmlType="submit" block className="register-btn" loading={loading}>
+                <Button type="primary" htmlType="submit" block className="register-btn" loading={loading} style={{ backgroundColor: '#003366', borderColor: '#003366' }}>
                   LOGIN
                 </Button>
               </Form.Item>
 
               <div style={{ textAlign: 'center' }}>
-                New User? <a href="/register" className="register-link">Register Here</a>
+                New User? <a href="/register" style={{ color: '#f47920' }}>Register Here</a>
               </div>
             </Form>
           </Col>
 
           {/* Right Side: Info Panel */}
-          <Col xs={24} md={12} style={{ background: '#003366', padding: '40px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-            <div>
-              <h2 style={{ color: '#ffffff', fontWeight: 'bold', marginBottom: '20px' }}>About C-DAC</h2>
-              <p style={{ color: 'rgba(255,255,255,0.9)', fontSize: '1rem', lineHeight: '1.6' }}>
-                The Centre for Development of Advanced Computing (C-DAC) is India’s premier R&D organization in IT, Electronics, and associated areas.
-              </p>
+          <Col xs={24} md={12} style={{ background: '#003366', padding: '40px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+            <div style={{ textAlign: 'center' }}>
+              <h2 style={{ color: '#ffffff', fontWeight: 'bold', marginBottom: '20px' }}>Welcome Back!</h2>
               <p style={{ color: 'rgba(255,255,255,0.9)', fontSize: '1rem', lineHeight: '1.6', marginBottom: '30px' }}>
-                Join our alumni community to connect with professionals, explore opportunities, and share knowledge.
+                Login to access exclusive alumni events, job opportunities, and connect with your batchmates.
               </p>
-              <img
-                src="/images/docs/india.gov.png"
-                alt="C-DAC"
-                style={{ maxHeight: '60px', opacity: 1 }}
-              />
+              {/* Add your logo image here if you have one, or keep the text */}
+              <div style={{ fontSize: '4rem', color: 'white' }}>🎓</div>
             </div>
           </Col>
         </Row>

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Input, Select, DatePicker, ConfigProvider, Card, Empty, Pagination } from 'antd'; // Added imports
 import { SearchOutlined } from '@ant-design/icons';
-import axios from 'axios';
+import axios from '../api/axios';
 import '../style/home.css';
 import * as bootstrap from "bootstrap";
 import { FaFacebookF, FaLinkedinIn, FaEnvelope } from "react-icons/fa";
